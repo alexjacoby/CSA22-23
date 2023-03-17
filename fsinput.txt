@@ -1,0 +1,23 @@
+$ cd /
+$ ls
+dir cmvqf
+dir dcgbjvj
+57426 gszshjwr.lrs
+dir nsgms
+124423 rjqns.prb
+dir wqvv
+$ cd cmvqf
+$ ls
+6852 cnsb.cmm
+319810 cwqbmjb.vpl
+dir dcgbjvj
+dir ddnclwtd
+dir gccnrw
+dir qwzphd
+dir rvqwnjv
+dir ssmf
+107040 trttdw.jsn
+dir wcn
+296426 wqvv
+$ cd dcgbjvj
+dir dcgbjvj
