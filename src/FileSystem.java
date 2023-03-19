@@ -1,9 +1,16 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class FileSystem {
-   public static void main(String[] args) throws Exception {
+   private Folder root;
+
+   /**
+    * Generate FileSystem based on text file, format specified
+    * in Advent of Code 2022, Day 7.
+    */
+   public FileSystem(String pathname) throws IOException {
       Folder root = new Folder(null, "root");
-      java.io.File file = new java.io.File("fsinput.txt");
+      java.io.File file = new java.io.File(pathname);
       Scanner in = new Scanner(file);
       Folder loc = root;
       while (in.hasNextLine()) {
@@ -12,9 +19,25 @@ public class FileSystem {
             loc = root;
          } else if (line.equals("$ ls")) {
             handleLs(loc, in);
+         } else if (line.equals("$ cd ..")) {
+            // NEW
+            if (loc.parent() == null) {
+               throw new IllegalStateException("Attempt to visit root's parent!");
+            }
+            loc = loc.parent();
+         } else if (line.startsWith("$ cd ")) {
+            // NEW and incomplete :)
+            String name = line.split(" ")[1];
+            // TODO: Find entry with given name, set loc equal to it.
+         } else {
+            // NEW
+            throw new IllegalStateException("Unexpected line: " + line);
          }
       }
       System.out.println("done");
+   }
+   public static void main(String[] args) throws Exception {
+      FileSystem fs = new FileSystem("fsinput.txt");
       /*
       Folder users = new Folder(root, "users");
       Folder programs = new Folder(root, "programs");
