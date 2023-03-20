@@ -21,6 +21,19 @@ public class Folder extends FSEntry {
       entries.add(e);
    }
 
+   /**
+    * Returns entry (file or folder) with given name, or null
+    * if not found.
+    */
+   public FSEntry getEntry(String name) {
+      for (FSEntry e : entries) {
+         if (e.name().equals(name)) {
+            return e;
+         }
+      }
+      return null;
+   }
+
    public String toString() {
       return super.toString() + " #entries=" + entries.size();
    }

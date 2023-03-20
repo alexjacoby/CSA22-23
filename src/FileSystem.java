@@ -9,7 +9,7 @@ public class FileSystem {
     * in Advent of Code 2022, Day 7.
     */
    public FileSystem(String pathname) throws IOException {
-      Folder root = new Folder(null, "root");
+      root = new Folder(null, "root");
       java.io.File file = new java.io.File(pathname);
       Scanner in = new Scanner(file);
       Folder loc = root;
@@ -20,15 +20,18 @@ public class FileSystem {
          } else if (line.equals("$ ls")) {
             handleLs(loc, in);
          } else if (line.equals("$ cd ..")) {
-            // NEW
             if (loc.parent() == null) {
                throw new IllegalStateException("Attempt to visit root's parent!");
             }
             loc = loc.parent();
          } else if (line.startsWith("$ cd ")) {
-            // NEW and incomplete :)
-            String name = line.split(" ")[1];
-            // TODO: Find entry with given name, set loc equal to it.
+            String name = line.split(" ")[2];
+            FSEntry entry = loc.getEntry(name);
+            if (entry instanceof Folder) {
+               loc = (Folder) entry;
+            } else {
+               throw new IllegalStateException("Attempt to cd to a file: " + name);
+            }
          } else {
             // NEW
             throw new IllegalStateException("Unexpected line: " + line);
