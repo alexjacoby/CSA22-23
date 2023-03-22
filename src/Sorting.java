@@ -55,17 +55,71 @@ public class Sorting {
       return vals;
    }
 
+   /** Sorts given array using MergeSort algorithm. */
+   public static void mergeSort(int[] a) {
+      // Base case: a.length < = 1
+      if (a.length <= 1) { return; }
+      int[] left = subarray(a, 0, a.length / 2);
+      int[] right = subarray(a, a.length / 2, a.length);
+      // Recursively sort both halves
+      mergeSort(left);
+      mergeSort(right);
+      merge(a, left, right);
+   }
+
+   /**
+    * Returns elements of array a including startIdx and
+    * excluding stopIdx.
+    */
+   public static int[] subarray(int[] a, int startIdx, int stopIdx) {
+      int[] res = new int[stopIdx - startIdx];
+      for (int i = 0; i < res.length; i++) {
+         res[i] = a[startIdx + i];
+      }
+      return res;
+      // Note: Use System.arrayCopy() if performance matters!
+   }
+
+   /**
+    * Merges two sorted arrays, a and b, into array m.
+    * Precondition: m.length >= a.length + b.length
+    */
+   public static void merge(int[] m, int[] a, int[] b) {
+      int idxA = 0, idxB = 0, idxM = 0;
+      while (idxA < a.length && idxB < b.length) {
+         if (a[idxA] <= b[idxB]) {
+            m[idxM] = a[idxA];
+            idxA++;
+         } else {
+            m[idxM] = b[idxB];
+            idxB++;
+         }
+         idxM++;
+      }
+      // Now one array is exhausted!
+      while (idxA < a.length) {
+         m[idxM] = a[idxA];
+         idxA++;
+         idxM++;
+      }
+      while (idxB < b.length) {
+         m[idxM] = b[idxB];
+         idxB++;
+         idxM++;
+      }
+   }
+
    public static void main(String[] args) {
-      int[] vals = randInts(100_000, 0, 10_000);
+      int[] vals = randInts(1_000_000, 0, 10_000);
       // System.out.println("Unsorted: " + Arrays.toString(vals));
       long startTimeMs = System.currentTimeMillis();
-      insertionSort(vals);
+      mergeSort(vals);
       long elapsed = System.currentTimeMillis() - startTimeMs;
       // System.out.println("Sorted: " + Arrays.toString(vals));
       System.out.println("Elapsed: " + elapsed + "ms");
       if (!isSorted(vals)) {
          System.out.println("Error! Array not sorted!");
-         System.out.println(Arrays.toString(vals));
+         // System.out.println(Arrays.toString(vals));
       }
    }
 }
