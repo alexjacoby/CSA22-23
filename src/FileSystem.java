@@ -1,6 +1,12 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * File system for demonstrating recursive data structures and algorithms and,
+ * incidentally, solving Advent of Code 2022 #7.
+ *
+ * @author AP CS A (March 2023)
+ */
 public class FileSystem {
    private Folder root;
 
@@ -53,7 +59,7 @@ public class FileSystem {
 
    }
 
-   private static void handleLs(Folder loc, Scanner in) {
+   private void handleLs(Folder loc, Scanner in) {
       System.out.println("in handleLs...");
       // Regular expression
       while (in.hasNext("(dir)|(\\d+)")) {
