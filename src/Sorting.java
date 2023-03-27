@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Sorting-related methods for AP CS A (2022-23).
@@ -109,17 +111,79 @@ public class Sorting {
       }
    }
 
-   public static void main(String[] args) {
-      int[] vals = randInts(1_000_000, 0, 10_000);
-      // System.out.println("Unsorted: " + Arrays.toString(vals));
-      long startTimeMs = System.currentTimeMillis();
-      mergeSort(vals);
-      long elapsed = System.currentTimeMillis() - startTimeMs;
-      // System.out.println("Sorted: " + Arrays.toString(vals));
-      System.out.println("Elapsed: " + elapsed + "ms");
-      if (!isSorted(vals)) {
-         System.out.println("Error! Array not sorted!");
-         // System.out.println(Arrays.toString(vals));
+   /**
+    * Returns index of val in sorted array a, or -1 if not found.
+    * Uses binary search algorithm.
+    * Note: if val appears multiple times in the array, which one of
+    * its valid indices is returned is not specified.
+    */
+   public static int indexOf(int[] a, int val) {
+      return indexOf(a, val, 0, a.length - 1);
+   }
+
+   /**
+    * Helper method for indexOf(int[], int) that searches sorted
+    * subarray of a from [min, max] (inclusive) for val and
+    * returns its index or -1 if not found.
+    */
+   private static int indexOf(int[] a, int val, int min, int max) {
+      // Base cases
+      if (min > max) { return -1; }
+      int mid = min + (max - min)/2;
+      if (a[mid] == val) { return mid; }
+      // Recursive case
+      if (val < a[mid]) {
+         // Search bottom half of subarray
+         return indexOf(a, val, min, mid - 1);
+      } else {
+         // Search top half of subarray
+         return indexOf(a, val, mid + 1, max);
       }
+   }
+
+   /**
+    * Runs given sorting algorithm on random int arrays of given size and
+    * prints the average time.  Warns if results are not sorted.
+    *
+    * Note: This uses advanced concepts (interfaces & method references) that
+    * are NOT tested on the AP exam (but they're pretty handy!).
+    *
+    * @param sorter A Consumer that takes an int[] to sort.
+    * @param size Size of random array of ints to sort.
+    * @param runs Number of times to run the sort.
+    */
+   private static void timeIt(Consumer<int[]> sorter, int size, int runs) {
+      long elapsed = 0;
+      for (int i = 0; i < runs; i++) {
+         int[] vals = randInts(size, 0, 10_000);
+         // System.out.println("Unsorted: " + Arrays.toString(vals));
+         long startTimeMs = System.currentTimeMillis();
+         sorter.accept(vals); // Calls the sorting method!
+         elapsed += System.currentTimeMillis() - startTimeMs;
+         System.out.print(".");
+         if (!isSorted(vals)) {
+            System.out.println("Error! Array not sorted!");
+            // System.out.println(Arrays.toString(vals));
+         }
+      }
+      System.out.println("Avg: " + (elapsed / runs) + "ms");
+   }
+   public static void main(String[] args) {
+      int[] vals = {1, 1, 4, 6, 8, 10};
+      System.out.println("Is 3 in the array? " + indexOf(vals, 3));
+      System.out.println("Is 4 in the array? " + indexOf(vals, 4));
+      vals = new int[] {};
+      System.out.println("search empty array: " + indexOf(vals, 4));
+      vals = randInts(1_000_000, -100000, 100000);
+      int target = vals[0];
+      mergeSort(vals);
+      System.out.println("1st element's new index: " + indexOf(vals, target));
+      final int size = (int) 1E5;
+      final int runs = 10;
+      System.out.println("Timing Sorting Algorithms: size=" + size + ", runs=" + runs);
+      System.out.println("** SelectionSort **");
+      timeIt(Sorting::insertionSort, size, runs);
+      System.out.println("** MergeSort **");
+      timeIt(Sorting::mergeSort, size, runs);
    }
 }
