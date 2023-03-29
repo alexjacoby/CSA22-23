@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Sorting-related methods for AP CS A (2022-23).
@@ -142,6 +141,30 @@ public class Sorting {
    }
 
    /**
+    * Returns index of val in sorted array a, or -1 if not found.
+    * (Same as indexOf(), but uses non-recursive binary search algorithm.)
+    * Note: if val appears multiple times in the array, which one of
+    * its valid indices is returned is not specified.
+    */
+   public static int binarySearch(int[] a, int val) {
+      int min = 0;
+      int max = a.length - 1;
+      while (min <= max) {
+         int mid = min + (max - min)/2;
+         if (a[mid] == val) {
+            return mid;
+         } else if (val < a[mid]) {
+            // search bottom half
+            max = mid - 1;
+         } else {
+            // search top half
+            min = mid + 1;
+         }
+      }
+      return -1;
+   }
+
+   /**
     * Runs given sorting algorithm on random int arrays of given size and
     * prints the average time.  Warns if results are not sorted.
     *
@@ -169,15 +192,18 @@ public class Sorting {
       System.out.println("Avg: " + (elapsed / runs) + "ms");
    }
    public static void main(String[] args) {
+      // indexOf / binarySearch tests
       int[] vals = {1, 1, 4, 6, 8, 10};
-      System.out.println("Is 3 in the array? " + indexOf(vals, 3));
-      System.out.println("Is 4 in the array? " + indexOf(vals, 4));
+      System.out.println("Is 3 in the array? " + binarySearch(vals, 3));
+      System.out.println("Is 4 in the array? " + binarySearch(vals, 4));
       vals = new int[] {};
-      System.out.println("search empty array: " + indexOf(vals, 4));
+      System.out.println("search empty array: " + binarySearch(vals, 4));
       vals = randInts(1_000_000, -100000, 100000);
       int target = vals[0];
       mergeSort(vals);
-      System.out.println("1st element's new index: " + indexOf(vals, target));
+      System.out.println("1st element's new index: " + binarySearch(vals, target));
+
+      // Sorting tests
       final int size = (int) 1E5;
       final int runs = 10;
       System.out.println("Timing Sorting Algorithms: size=" + size + ", runs=" + runs);
